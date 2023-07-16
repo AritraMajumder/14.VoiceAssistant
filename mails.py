@@ -41,13 +41,13 @@ def generator(prompt,name):
 
 def mailer(name,subject,prompt):
     #you can mail from a single preset email address to your contacts
-    contacts = {'aritra':'aritra.majumder2021@vitstudent.ac.in',
-                'peter':'peterpan40979@gmail.com'
+    contacts = {'person1':'mail1',
+                'person2':'mail2'
                 }
     body = generator(prompt,name)
     #hard coded
-    sender_email = 'aritra@gmail.com'
-    username = 'aritram848@gmail.com'
+    sender_email = 'your mail id'
+    username = 'your mail id'
     if name not in contacts:
         return 2
     receiver_email = contacts[name]
@@ -79,7 +79,7 @@ def reader(num,option):
     tasks = []
     try:
         imap = imaplib.IMAP4_SSL("imap.gmail.com")
-        result = imap.login('aritram848@gmail.com', mail_key)
+        result = imap.login('your mail id', mail_key)
         imap.select('inbox',readonly = True)
         response, messages = imap.search(None,'ALL')
         messages = messages[0].split()
