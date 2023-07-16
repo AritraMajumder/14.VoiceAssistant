@@ -1,3 +1,3 @@
-mail_key = 'digdshinwohpcepm'
+mail_key = 'your application password'
 
-eden_key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiOTM4OTY5OWQtYmM2Yy00NDFiLWE5ZmEtMzM5OTllZjRjYjQ3IiwidHlwZSI6ImFwaV90b2tlbiJ9.PYcq8e5dfA053mvT0BNqrA9BwoUcrA0X2SREtNclH-o'
+eden_key = 'your eden ai API key'
