@@ -28,24 +28,27 @@ def listen():
         audio = r.listen(source)
         try:
             text = r.recognize_google(audio)
-            #speak("You said: " + text)       
+            speak("You said: " + text)       
+            return text.lower()
         except sr.UnknownValueError:
-            speak("Sorry, I could not understand your speech.")
+            speak("Sorry, I could not understand your speech.Try again")
+            listen()
         except sr.RequestError as e:
-            speak(f"Sorry, an error occurred: {e}")
-    return text
+            speak(f"Sorry, an error occurred: {e}.Try again")
+            listen()
+    
 
 
 #driver
 speak("Your personal voice assistant is active and ready to receive commands")
-a = listen().lower()
+a = listen()
 while "power down" not in a:
     if "voice note" in a:
         #TODO enter voice notes in a loop
         if "create" in a:
             speak("Moving to create a voice note")
             speak("Enter note name")
-            filename = listen().lower()
+            filename = listen().replace(" ","")
             speak("Enter content")
             content = listen()
 
@@ -57,7 +60,7 @@ while "power down" not in a:
         elif "delete" in a:
             speak("Moving to delete a voice note")
             speak("Enter note name")
-            filename = listen().lower()
+            filename = listen().replace(" ","")
             if delete(filename)==1:
                 speak("file successfully deleted")
             elif delete(filename)==2:
@@ -69,19 +72,20 @@ while "power down" not in a:
         elif "recite" in a:
             speak("Moving to recite a voice note")
             speak("Enter note name")
-            filename = listen().lower()
-            if recite(filename)==2:
+            filename = listen().replace(" ","")
+            print(filename)
+            if read_out(filename)==2:
                 speak("sorry but that file does not exist")
-            elif recite(filename)==0:
+            elif read_out(filename)==0:
                 speak("an error occured while reciting this file")
             else:
                 speak(f"contents of {filename} are as follows")
-                speak(recite(filename))
+                speak(read_out(filename))
         else:
             speak("no such function")
         #TODO add a function to edit created voice notes
         speak("anything else?")
-        a = listen().lower()
+        a = listen()
 
     elif "reminder" in a:
         speak("moving to create a reminder")
@@ -94,12 +98,16 @@ while "power down" not in a:
             flag=1
             count=0
             while(flag==1):
-                entry = listen().lower()
+                entry = listen()
+                print(entry)
                 if "exit list" in entry:
                     speak(f"exiting list. added {count} items")
                     flag=0
                 else:
-                    item = entry.split(" of ")
+                    if "of" in entry:
+                        item = entry.split(" of ")
+                    elif "off" in entry:
+                        item = entry.split(" off ")
                     if adding(item[0],item[1])==1:
                         count+=1
                         speak("next item")
@@ -115,7 +123,7 @@ while "power down" not in a:
             while(flag==1):
                 #listen here
                 #just enter name of item to delete
-                entry = listen().lower()
+                entry = listen()
                 if "exit list" in entry:
                     speak(f"exiting list after removing {count} items")
                     flag=0
@@ -128,12 +136,12 @@ while "power down" not in a:
                         speak(f"exiting list after removing {count} items")
                         flag=0
                     else:
-                        speak("there was an error while adding the item")
+                        speak("there was an error while removing the item")
                 
         elif "edit" in a:
             speak("Moving to edit a list item")
             speak("enter item to edit")
-            entry1 = listen().lower()
+            entry1 = listen()
             speak("enter new quantity")
             entry2 = listen()
             if editing(entry1,entry2)==1:
@@ -161,7 +169,7 @@ while "power down" not in a:
         else:
             speak("no such function")
         speak("anything else")
-        a = listen().lower()
+        a = listen()
             
     elif "expense" in a:
         if "add" in a:
@@ -173,7 +181,7 @@ while "power down" not in a:
                 #listen here
                 #"july 10 600 category1"
                 entry = listen()
-                if "end tracker" in entry:
+                if "stop track" in entry:
                     speak("ending tracker")
                     speak(f"{count} expenses added")
                     flag = 0
@@ -194,7 +202,8 @@ while "power down" not in a:
                 #listen here
                 #july 10 category5
                 data = listen()
-                if "end tracker" in data:
+                print(data)
+                if "stop track" in data:
                     speak("ending tracker")
                     speak(f"{count} expenses deleted")
                     flag=0
@@ -207,6 +216,7 @@ while "power down" not in a:
                         speak("next item")
                     elif delete_expense(data)==3:
                         speak("expense does not exist")
+                        speak("next item")
                     else:
                         speak("there was an error in deleting the expense")
         
@@ -218,12 +228,12 @@ while "power down" not in a:
                 #listen here
                 #just enter month name
                 entry = listen()
-                if "end tracker" in entry:
+                if "stop track" in entry:
                     speak("ending tracker")
                     flag=0
                 else:
                     data = monthly_expense(entry)
-                    speak(f"in {month} you spent")
+                    speak(f"in {entry} you spent")
                     for i in data:
                         speak(f"{i[1]} on {i[0]}")
                     speak("thats it")
@@ -234,7 +244,7 @@ while "power down" not in a:
                 speak("please select a month")
                 #listen here
                 entry = listen()
-                if "end tracker" in entry:
+                if "stop track" in entry:
                     speak("ending tracker")
                     flag = 0
                 else:
@@ -251,7 +261,7 @@ while "power down" not in a:
         else:
             speak("no such function")
         speak("anything else")
-        a = listen().lower()
+        a = listen()
 
     elif "email" in a:
         if "compose" in a:
@@ -282,7 +292,7 @@ while "power down" not in a:
             speak("moving to summarize recently received emails")
             speak("how many emails would you like to read")
             #listen here
-            num = listen()
+            num = listen().split(" last ")[-1]
             speak(f"summarizing the {num} most recent mails. this may take a while")
             summed = reader(num,1)
             if summed ==0:
@@ -300,7 +310,7 @@ while "power down" not in a:
             speak("moving to list out tasks from emails")
             speak("how many emails would you like to scan for tasks")
             #listen here
-            num = listen()
+            num = listen().split(" last ")[-1]
             speak(f"looking for given tasks from the {num} most recent mails. this may take a while")
             tasked = reader(num,2)
             if tasked ==0:
@@ -317,11 +327,11 @@ while "power down" not in a:
         else:
             speak("no such function")
         speak("anything else")
-        a = listen().lower()
+        a = listen()
 
     else:
         speak("No command recognized. Ready to receive again.")
-        a = listen().lower()
+        a = listen()
 
 speak("Powering down. See you later")
 
