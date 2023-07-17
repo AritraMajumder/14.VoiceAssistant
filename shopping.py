@@ -71,3 +71,4 @@ def clearing():
     
     except IOError:
         return 0
+        
