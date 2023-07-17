@@ -33,6 +33,7 @@ def delete_expense(data):
                         with open(filepath, 'w', newline='') as csv_file:
                             writer = csv.writer(csv_file)
                             writer.writerows(entries)
+                            return 1
                 return 3
     except IOError:
         return 0
