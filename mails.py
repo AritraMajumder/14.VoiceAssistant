@@ -31,7 +31,7 @@ def generator(prompt,name):
     url = "https://api.edenai.run/v2/text/generation"
     payload = {
         "providers": "openai,cohere",
-        "text": prompt+ " to " + name + "from Aritra",
+        "text": prompt+ " to " + name + "from YOUR_NAME",
         "temperature": 0.2,
         "max_tokens": 250
     }
